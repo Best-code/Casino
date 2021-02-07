@@ -14,6 +14,9 @@ extern bool userExist;
 #include "casinoGames.h"
 #include "Users.h"
 
+static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+void runSQL(String&, int);
+
 using std::cout;
 using std::cin;
 

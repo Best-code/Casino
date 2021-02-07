@@ -15,15 +15,21 @@ void User::gamesMenu() {
     cout << "Games Here";
 }
 
+int x = -1;
 void User::Login() {
+    x += 1;
     cls;
     cout << "Colins Casino - Login Page\n\n";
     //if given password doesnt match the users password
     if (!grantAccess) {
-        cout << "Your Username or Password was Incorrect.\nPlease Try Again.\n\n";
+        if(x>0){
+            cout << "Your Password was Incorrect.\nPlease Try Again.\n\n";
+        }
     }
     if (!userExist) {
-        cout << "That Username does not Exist.\nPlease Try Again.\n\n";
+        if (x > 0) {
+            cout << "That Username does not Exist.\nPlease Try Again.\n\n";
+        }
     }
     cout << "Please Enter your Username > ";
     cin >> username;
@@ -32,12 +38,12 @@ void User::Login() {
 
     //Checks if the user exist
     String sql = "SELECT username FROM user WHERE username = '" + username + "';";
-    runSQL(sql);
+    runSQL(sql,2);
 
     //if he does exist check if his password is correct
     if (userExist) {
         String sql = "SELECT password FROM user WHERE username = '" + username + "';";
-        runSQL(sql);
+        runSQL(sql,1);
 
         //if he exist and his password is correct goto gamesMenu
         if (grantAccess)
@@ -87,13 +93,13 @@ void User::Register() {
 
         //Check if there is someone already with that name and if so set bool changeName to true
         String sql = "SELECT username FROM user WHERE username = '" + username + "'";
-        runSQL(sql);
+        runSQL(sql,1);
 
         //if no one has the name, change name will be false and you will be added to the database
         //with a base balance of 500
         if (!changeName) {
             sql = "INSERT INTO user(username,password,balance) VALUES('" + username + "','" + password + "', 500)";
-            runSQL(sql);
+            runSQL(sql,1);
 
             gamesMenu();
         }

@@ -25,11 +25,6 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
         grantAccess = false;
     }
     
-
-    if (argv[0] == newUser.username) {
-        userExist = true;
-    }
-    
     if (argv[0] == newUser.username) {
         changeName = true;
     }
@@ -38,13 +33,35 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     return 0;
 }
 
-void runSQL(String& sql) {
+static int ueCall(void* NotUsed, int argc, char** argv, char** azColName) {
+
+    printf("\n");
+    return 0;
+};
+
+
+
+void runSQL(String& sql, int n) {
     sqlite3* DB;
     char* errMsg = 0;
 
-    int exit = sqlite3_open("src/db/casino.db", &DB);
+    sqlite3_stmt* stmt2;
 
-    sqlite3_exec(DB, sql.c_str(), callback, 0, &errMsg);
+    int exit = sqlite3_open("src/db/casino.db", &DB);
+    if(n == 1)
+        sqlite3_exec(DB, sql.c_str(), callback, 0, &errMsg);
+    if (n == 2) {
+        sqlite3_prepare(DB, sql.c_str(), -1, &stmt2, NULL);
+        int x = sqlite3_step(stmt2);
+        if (x == SQLITE_DONE) {
+            userExist = false;
+            grantAccess = true;
+        }
+        else {
+            userExist = true;
+        }
+    }
+
     sqlite3_close(DB);
 }
 
